@@ -1,0 +1,15 @@
+apiVersion : v1
+kind: Pod
+metadata:
+  name: django-app
+  labels:
+    env  : dev
+    app  : test_project
+    tier : backend
+    owner: SergeyRyapin
+spec:
+  containers:
+    - name : django-app
+      image: sergryap/django_app
+      ports:
+        - containerPort: 80
