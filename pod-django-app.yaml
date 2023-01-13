@@ -11,14 +11,15 @@ spec:
   containers:
     - name : django-app
       image: sergryap/django_app
+      ports:
+        - containerPort: 80
       env:
         - name: SECRET_KEY
-          value: "REPLACE_ME"
+          value: "django-insecure-0if40nf4nf93n4"
         - name: DEBUG
           value: "False"
         - name: DATABASE_URL
-          value: "postgres://test_k8s:OwOtBep9Frut@db:5432/test_k8s"
+          value: "postgres://test_k8s:OwOtBep9Frut@192.168.59.100:5432/test_k8s"
         - name: ALLOWED_HOSTS
-          value: "127.0.0.1,localhost"
-      ports:
-        - containerPort: 80
+          value: "127.0.0.1,localhost,192.168.59.100"
+
