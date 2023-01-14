@@ -10,6 +10,9 @@ services:
       POSTGRES_USER: ${POSTGRES_USER-test_k8s}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD-OwOtBep9Frut}
     ports:
-      - 5432:5432
+      - "5432:5432"
 volumes:
   db_data:
+
+# docker run -p 5432:5432 -d -e POSTGRES_DB=test_k8s -e POSTGRES_USER=test_k8s -e POSTGRES_PASSWORD=OwOtBep9Frut postgres:12.0-alpine
+# docker exec -it k8s_django-app_django-app_default_5f255057-987c-4175-b397-71dc6bc043e2_0 bash
