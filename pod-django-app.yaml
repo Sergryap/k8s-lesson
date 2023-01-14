@@ -14,7 +14,6 @@ spec:
       image: sergryap/django_app
       ports:
         - containerPort: 80
-        - containerPort: 5432
       env:
         - name: SECRET_KEY
           value: "django-insecure-0if40nf4nf93n4"
