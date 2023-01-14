@@ -7,7 +7,6 @@ WORKDIR /code
 COPY requirements.txt /code/
 COPY en /code/
 RUN apt update && apt install -y python3-pip                                  \
-    && apt install -y postgresql                                              \
     && python3 -m pip install --upgrade pip                                   \
     && pip3 install -r requirements.txt                                       \
     && apt remove -y python3-pip                                              \
