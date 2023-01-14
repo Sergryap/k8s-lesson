@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django-app-deployment
+  labels:
+    app  : django-app
+    env  : prod
+    owner: SergRyap
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      project: k8s-django
+  template:
+    metadata:
+      labels:
+        project: k8s-django
+    spec:
+      hostNetwork: true
+      containers:
+        - name: django-app
+          image: sergryap/django_app
+          ports:
+            - containerPort: 80
+          env:
+            - name: SECRET_KEY
+              value: "django-insecure-0if40nf4nf93n4"
+            - name: DEBUG
+              value: "False"
+            - name: DATABASE_URL
+              value: "postgres://test_k8s:OwOtBep9Frut@192.168.59.100:5432/test_k8s"
+            - name: ALLOWED_HOSTS
+              value: "127.0.0.1,localhost,192.168.59.100"
+---
+
+
+#kubectl expose deployment django-app-deployment --type=NodePort --port=80
+#minikube service django-app-deployment --url
