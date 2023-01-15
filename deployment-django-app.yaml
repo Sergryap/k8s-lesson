@@ -14,7 +14,7 @@ spec:
   template:
     metadata:
       labels:
-        project: k8s-django
+        project: k8s-django # Service will look for those PODS Labels
     spec:
       hostNetwork: true
       containers:
@@ -32,7 +32,22 @@ spec:
             - name: ALLOWED_HOSTS
               value: "127.0.0.1,localhost,192.168.59.100"
 ---
-
+apiVersion: v1
+kind: Service
+metadata:
+  name: django-app-service
+  labels:
+    env  : prod
+    owner: SergRyap
+spec:
+  selector:
+    project: k8s-django    # Selecting PODS with those Labels
+  ports:
+    - name      : app-listener
+      protocol  : TCP
+      port      : 80  # Port on NodePort
+      targetPort: 80  # Port on POD
+  type: NodePort
 
 #kubectl expose deployment django-app-deployment --type=NodePort --port=80
 #minikube service django-app-deployment --url
