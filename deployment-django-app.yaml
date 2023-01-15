@@ -50,4 +50,4 @@ spec:
   type: NodePort
 
 #kubectl expose deployment django-app-deployment --type=NodePort --port=80
-#minikube service django-app-deployment --url
+#minikube service django-app-service --url
