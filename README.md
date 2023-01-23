@@ -32,3 +32,33 @@ $ docker-compose run web ./manage.py createsuperuser
 `ALLOWED_HOSTS` -- настройка Django со списком разрешённых адресов. Если запрос прилетит на другой адрес, то сайт ответит ошибкой 400. Можно перечислить несколько адресов через запятую, например `127.0.0.1,192.168.0.1,site.test`. [Документация Django](https://docs.djangoproject.com/en/3.2/ref/settings/#allowed-hosts).
 
 `DATABASE_URL` -- адрес для подключения к базе данных PostgreSQL. Другие СУБД сайт не поддерживает. [Формат записи](https://github.com/jacobian/dj-database-url#url-schema).
+
+
+## Как запустить сайт в кластере minikube
+
+У вас должны быть установлены `minikube` и `kubectl`
+
+#### Запустите minikube:
+```sh
+minikube start
+```
+#### Создайте файл для переменных окружения
+
+Например `.env`, содержащий все необходимые переменные для работы приложения:
+
+```
+SECRET_KEY=<секретный ключ вашего проекта>
+DEBUG=False
+DATABASE_URL=postgres://test_k8s:OwOtBep9Frut@<ip вашего кластера>:5432/test_k8s
+ALLOWED_HOSTS=127.0.0.1,localhost,<ip вашего кластера>
+```
+#### Создайте ConfigMap для вашего проекта:
+
+```sh
+kubectl create configmap django-app-config --from-env-file=.env
+```
+
+#### Получите ip адрес, по которому будет доступен ваш сайт:
+```sh
+minikube service django-app-service --url
+```
