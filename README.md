@@ -43,9 +43,7 @@ $ docker-compose run web ./manage.py createsuperuser
 minikube start
 ```
 #### Создайте файл для переменных окружения
-
 Например `.env`, содержащий все необходимые переменные для работы приложения:
-
 ```
 SECRET_KEY=<секретный ключ вашего проекта>
 DEBUG=False
@@ -53,9 +51,13 @@ DATABASE_URL=postgres://test_k8s:OwOtBep9Frut@<ip вашего кластера>
 ALLOWED_HOSTS=127.0.0.1,localhost,<ip вашего кластера>
 ```
 #### Создайте ConfigMap для вашего проекта:
-
 ```sh
 kubectl create configmap django-app-config --from-env-file=.env
+```
+
+#### Создайте Deployment:
+```sh
+kubectl apply -f deployment-django-app.yaml
 ```
 
 #### Получите ip адрес, по которому будет доступен ваш сайт:
