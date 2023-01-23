@@ -20,17 +20,11 @@ spec:
       containers:
         - name: django-app
           image: sergryap/django_app
+          envFrom:
+            - configMapRef:
+                name: django-app-config
           ports:
             - containerPort: 80
-          env:
-            - name: SECRET_KEY
-              value: "django-insecure-0if40nf4nf93n4"
-            - name: DEBUG
-              value: "False"
-            - name: DATABASE_URL
-              value: "postgres://test_k8s:OwOtBep9Frut@192.168.59.100:5432/test_k8s"
-            - name: ALLOWED_HOSTS
-              value: "127.0.0.1,localhost,192.168.59.100"
 ---
 apiVersion: v1
 kind: Service
@@ -51,3 +45,4 @@ spec:
 
 #kubectl expose deployment django-app-deployment --type=NodePort --port=80
 #minikube service django-app-service --url
+#kubectl create configmap django-app-config --from-env-file=backend_main_django/.env - For more flexibility and decoupling from Kubernetes, you can also use external configuration files in the format VAR=VAL
