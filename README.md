@@ -93,4 +93,6 @@ kubectl get ingress
 ```sh
 echo "$(minikube ip) start-burger.test" | sudo tee -a /etc/hosts
 ```
+#### Сайт будет доступен по ссылке: http://star-burger.test с вашей локальной машины:
+![Снимок экрана от 2023-01-24 22-49-25](https://user-images.githubusercontent.com/99894266/214369620-4682c2f5-c3da-4b18-b7da-fa454e6daf43.png)
 
