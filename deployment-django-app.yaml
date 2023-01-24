@@ -7,7 +7,7 @@ metadata:
     env  : prod
     owner: SergRyap
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       project: k8s-django
@@ -16,15 +16,16 @@ spec:
       labels:
         project: k8s-django # Service will look for those PODS Labels
     spec:
-      hostNetwork: true
       containers:
         - name: django-app
           image: sergryap/django_app
+          imagePullPolicy: Always
           envFrom:
             - configMapRef:
                 name: django-app-config
           ports:
             - containerPort: 80
+              protocol  : TCP
 ---
 apiVersion: v1
 kind: Service
@@ -36,13 +37,17 @@ metadata:
 spec:
   selector:
     project: k8s-django    # Selecting PODS with those Labels
+  type: ClusterIP
   ports:
     - name      : app-listener
       protocol  : TCP
       port      : 80  # Port on NodePort
       targetPort: 80  # Port on POD
-  type: NodePort
 
+
+#minikube ssh docker start sleepy_pike
 #kubectl expose deployment django-app-deployment --type=NodePort --port=80
 #minikube service django-app-service --url
 #kubectl create configmap django-app-config --from-env-file=backend_main_django/.env - For more flexibility and decoupling from Kubernetes, you can also use external configuration files in the format VAR=VAL
+#kubectl patch configmap tcp-services -n ingress-nginx --patch '{"data":{"80":"default/django-app-service:80"}}'
+#kubectl patch deployment ingress-nginx-controller --patch "$(cat ingress-nginx-controller-patch.yaml)" -n ingress-nginx
