@@ -54,7 +54,10 @@ ALLOWED_HOSTS=127.0.0.1,localhost,<ip вашего кластера>
 ```sh
 kubectl create configmap django-app-config --from-env-file=.env
 ```
-
+Если в дальнейшем потребуется обновить ConfigMap, выполните сначала удаление предыдущей версии:
+```sh
+kubectl delete configmap django-app-config
+```
 #### Создайте Deployment:
 ```sh
 kubectl apply -f deployment-django-app.yaml
