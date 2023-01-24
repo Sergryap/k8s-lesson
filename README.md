@@ -88,6 +88,11 @@ kubectl apply -f ingress-django-app.yaml
 kubectl get ingress
 ```
 ![Снимок экрана от 2023-01-24 22-42-48](https://user-images.githubusercontent.com/99894266/214368116-a365f65d-e7b4-4c90-8f79-0d241dcb8148.png)
+#### Проверьте, что сервисы спрятаны за ClusterIP:
+```sh
+kubectl get service
+```
+![Снимок экрана от 2023-01-24 22-56-04](https://user-images.githubusercontent.com/99894266/214370900-bda0512c-c99f-4272-a76b-a0f6d8e458bf.png)
 
 #### Обновите файл /etc/hosts для маршрутизации запросов от star-burger.test к экземпляру minikube:
 ```sh
