@@ -83,7 +83,14 @@ kubectl get configmap tcp-services -n ingress-nginx -o yaml
 ```sh
 kubectl apply -f ingress-django-app.yaml
 ```
-#### Вы можете проветить состояниедобавленного вами Ingress:
+#### Вы можете проветить состояние добавленного вами Ingress:
 ```sh
 kubectl get ingress
 ```
+![Снимок экрана от 2023-01-24 22-42-48](https://user-images.githubusercontent.com/99894266/214368116-a365f65d-e7b4-4c90-8f79-0d241dcb8148.png)
+
+#### Обновите файл /etc/hosts для маршрутизации запросов от star-burger.test к экземпляру minikube:
+```sh
+echo "$(minikube ip) start-burger.test" | sudo tee -a /etc/hosts
+```
+
