@@ -42,6 +42,11 @@ $ docker-compose run web ./manage.py createsuperuser
 ```sh
 minikube start
 ```
+#### Включите надстройку входа minikube с помощью следующей команды:
+```sh
+minikube addons enable ingress
+```
+
 #### Создайте файл для переменных окружения
 Например `.env`, содержащий все необходимые переменные для работы приложения:
 ```
@@ -58,12 +63,27 @@ kubectl create configmap django-app-config --from-env-file=.env
 ```sh
 kubectl delete configmap django-app-config
 ```
-#### Создайте Deployment:
+#### Создайте Deployment и Service для вашего приложения django:
 ```sh
 kubectl apply -f deployment-django-app.yaml
 ```
-
-#### Получите ip адрес, по которому будет доступен ваш сайт:
+#### Добавьте службу TCP в контроллер входящего трафика nginx, выполните следующую команду:
 ```sh
-minikube service django-app-service --url
+kubectl patch configmap tcp-services -n ingress-nginx --patch '{"data":{"80":"default/django-app-service:80"}}'
+```
+Где:
+- `80`: порт, который ваша служба должна прослушивать из-за пределов виртуальной машины minikube
+- `default`: пространство имен, в котором установлена ваша служба
+- `django-app-service`: название сервиса 
+Мы можем убедиться, что наш ресурс был исправлен с помощью следующей команды:
+```sh
+kubectl get configmap tcp-services -n ingress-nginx -o yaml
+```
+#### Настройте правила для воходящего трафика для вашего ingress:
+```sh
+kubectl apply -f ingress-django-app.yaml
+```
+#### Вы можете проветить состояниедобавленного вами Ingress:
+```sh
+kubectl get ingress
 ```
