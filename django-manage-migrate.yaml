@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: django-app-manage-migrate
+spec:
+  template:
+    spec:
+      containers:
+      - name: db-migrate
+        image: sergryap/django_app
+        envFrom:
+          - configMapRef:
+              name: django-app-config
+        imagePullPolicy: IfNotPresent
+        command: ["python",  "manage.py", "migrate", "--noinput", "--check"]
+      restartPolicy: Never
+  backoffLimit: 4
