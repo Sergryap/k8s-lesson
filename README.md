@@ -52,12 +52,12 @@ minikube addons enable ingress
 ```
 SECRET_KEY=<секретный ключ вашего проекта>
 DEBUG=False
-DATABASE_URL=postgres://test_k8s:OwOtBep9Frut@<ip вашего кластера>:5432/test_k8s
+DATABASE_URL=postgres://test_k8s:OwOtBep9Frut@<host>:5432/test_k8s
 ALLOWED_HOSTS=127.0.0.1,localhost,<ip вашего кластера>
 ```
 #### Создайте ConfigMap для вашего проекта:
 ```sh
-kubectl create configmap django-app-config --from-env-file=.env
+kubectl create configmap django-app-config --from-env-file=backend_main_django/.env
 ```
 Если в дальнейшем потребуется обновить ConfigMap, выполните сначала удаление предыдущей версии:
 ```sh
