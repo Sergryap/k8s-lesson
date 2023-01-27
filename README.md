@@ -75,6 +75,7 @@ kubectl patch configmap tcp-services -n ingress-nginx --patch '{"data":{"80":"de
 - `80`: порт, который ваша служба должна прослушивать из-за пределов виртуальной машины minikube
 - `default`: пространство имен, в котором установлена ваша служба
 - `django-app-service`: название сервиса 
+
 Мы можем убедиться, что наш ресурс был исправлен с помощью следующей команды:
 ```sh
 kubectl get configmap tcp-services -n ingress-nginx -o yaml
