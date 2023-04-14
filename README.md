@@ -46,22 +46,9 @@ minikube start
 ```sh
 minikube addons enable ingress
 ```
-
-#### Создайте файл для переменных окружения
-Например `.env`, содержащий все необходимые переменные для работы приложения:
-```
-SECRET_KEY=<секретный ключ вашего проекта>
-DEBUG=False
-DATABASE_URL=postgres://test_k8s:OwOtBep9Frut@<host>:5432/test_k8s
-ALLOWED_HOSTS=127.0.0.1,localhost,<ip вашего кластера>
-```
-#### Создайте ConfigMap для вашего проекта:
+#### Создайте Secret c необходимым данными для вашего проекта:
 ```sh
-kubectl create configmap django-app-config --from-env-file=backend_main_django/.env
-```
-Если в дальнейшем потребуется обновить ConfigMap, выполните сначала удаление предыдущей версии:
-```sh
-kubectl delete configmap django-app-config
+kubectl create -f app_secret.yaml
 ```
 #### Создайте Deployment и Service для вашего приложения django:
 ```sh
@@ -76,7 +63,7 @@ kubectl patch configmap tcp-services -n ingress-nginx --patch '{"data":{"80":"de
 - `default`: пространство имен, в котором установлена ваша служба
 - `django-app-service`: название сервиса 
 
-Мы можем убедиться, что наш ресурс был исправлен с помощью следующей команды:
+Вы можем убедиться, что наш ресурс был исправлен с помощью следующей команды:
 ```sh
 kubectl get configmap tcp-services -n ingress-nginx -o yaml
 ```
@@ -95,14 +82,23 @@ kubectl get service
 ```
 ![Снимок экрана от 2023-01-24 22-56-04](https://user-images.githubusercontent.com/99894266/214370900-bda0512c-c99f-4272-a76b-a0f6d8e458bf.png)
 
+#### Выполните миграцию базы данных:
+```sh
+kubectl apply -f django-manage-migrate.yaml
+```
+#### Создайте суперпользователя:
+```sh
+kubectl apply -f django-manage-createsuperuser.yaml
+```
 #### Обновите файл /etc/hosts для маршрутизации запросов от star-burger.test к экземпляру minikube:
 ```sh
-echo "$(minikube ip) start-burger.test" | sudo tee -a /etc/hosts
+echo "$(minikube ip) star-burger.test" | sudo tee -a /etc/hosts
 ```
-#### Сайт будет доступен по ссылке: http://star-burger.test с вашей локальной машины:
-![Снимок экрана от 2023-01-24 22-49-25](https://user-images.githubusercontent.com/99894266/214369620-4682c2f5-c3da-4b18-b7da-fa454e6daf43.png)
 #### Настройте регулярное удаление сессий
 Для этого выполните команду по созданию регулярно повторяющейся задачи CronJob:
 ```sh
 kubectl create -f clearsessions-cronjob.yaml
 ```
+#### Сайт будет доступен по ссылке: http://star-burger.test с вашей локальной машины:
+![Снимок экрана от 2023-01-24 22-49-25](https://user-images.githubusercontent.com/99894266/214369620-4682c2f5-c3da-4b18-b7da-fa454e6daf43.png)
+
