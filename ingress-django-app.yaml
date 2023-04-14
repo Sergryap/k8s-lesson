@@ -2,13 +2,17 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress-wildcard-host
+  labels:
+    app: django-app
+    env: prod
+    owner: SergRyap
 spec:
   rules:
-  - host: "star-burger.test"
+  - host: star-burger.test
     http:
       paths:
       - pathType: Prefix
-        path: "/"
+        path: /
         backend:
           service:
             name: django-app-service
