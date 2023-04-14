@@ -38,7 +38,7 @@ $ docker-compose run web ./manage.py createsuperuser
 
 У вас должны быть установлены `minikube` и `kubectl`
 
-#### Запустите minikube:
+#### Создайте кластер в minikube:
 ```sh
 minikube start
 ```
@@ -46,15 +46,22 @@ minikube start
 ```sh
 minikube addons enable ingress
 ```
+#### Запустите PostgreSQL в созданном кластере:
+```sh
+helm repo add my-repo https://charts.bitnami.com/bitnami
+helm install my-release my-repo/postgresql
+```
 #### Создайте Secret c необходимым данными для вашего проекта:
 ```sh
-kubectl create -f app_secret.yaml
+kubectl create -f app_secret.yaml` не должен размещаться в открытом доступе
 ```
+Для реального проекта файл `app_secret.yaml` не должен размещаться в открытом доступе
+
 #### Создайте Deployment и Service для вашего приложения django:
 ```sh
 kubectl apply -f deployment-django-app.yaml
 ```
-#### Добавьте службу TCP в контроллер входящего трафика nginx, выполните следующую команду:
+#### Добавьте службу TCP в контроллер входящего трафика nginx, выполнив следующую команду:
 ```sh
 kubectl patch configmap tcp-services -n ingress-nginx --patch '{"data":{"80":"default/django-app-service:80"}}'
 ```
