@@ -1,0 +1,49 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: django-app-manage-createsuperuser
+  labels:
+    app: django-app
+    env: prod
+    owner: SergRyap
+spec:
+  template:
+    spec:
+      containers:
+      - name: db-migrate
+        image: sergryap/django_app
+        env:
+          - name: SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: django-app-secret
+                key: secret_key
+          - name: DEBUG
+            valueFrom:
+              secretKeyRef:
+                name: django-app-secret
+                key: debug
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: django-app-secret
+                key: database_url
+          - name: ALLOWED_HOSTS
+            valueFrom:
+              secretKeyRef:
+                name: django-app-secret
+                key: allowed_hosts
+          - name: DJANGO_SUPERUSER_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: django-app-secret
+                key: superuser_password
+          - name: DJANGO_SUPERUSER_EMAIL
+            valueFrom:
+              secretKeyRef:
+                name: django-app-secret
+                key: superuser_email
+        imagePullPolicy: IfNotPresent
+        command: ["python",  "manage.py", "createsuperuser", "--username", "admin", "--noinput"]
+      restartPolicy: Never
+  backoffLimit: 4
