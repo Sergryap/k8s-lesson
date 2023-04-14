@@ -53,7 +53,7 @@ helm install my-release my-repo/postgresql
 ```
 #### Создайте Secret c необходимым данными для вашего проекта:
 ```sh
-kubectl create -f app_secret.yaml`
+kubectl create -f app_secret.yaml
 ```
 Для реального проекта файл `app_secret.yaml` не должен размещаться в открытом доступе
 
@@ -97,14 +97,28 @@ kubectl apply -f django-manage-migrate.yaml
 ```sh
 kubectl apply -f django-manage-createsuperuser.yaml
 ```
-#### Обновите файл /etc/hosts для маршрутизации запросов от star-burger.test к экземпляру minikube:
-```sh
-echo "$(minikube ip) star-burger.test" | sudo tee -a /etc/hosts
-```
 #### Настройте регулярное удаление сессий
 Для этого выполните команду по созданию регулярно повторяющейся задачи CronJob:
 ```sh
 kubectl create -f clearsessions-cronjob.yaml
+```
+#### Обновите файл /etc/hosts для маршрутизации запросов от star-burger.test к экземпляру minikube:
+```sh
+echo "$(minikube ip) star-burger.test" | sudo tee -a /etc/hosts
+```
+#### Убедитесь что файл `/etc/hosts` содержит правильную информацию:
+```sh
+sergryap@laptop-serg:/$ cat /etc/hosts
+127.0.0.1	localhost
+127.0.1.1	laptop-serg
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+192.168.49.2 star-burger.test
 ```
 #### Сайт будет доступен по ссылке: http://star-burger.test с вашей локальной машины:
 ![Снимок экрана от 2023-01-24 22-49-25](https://user-images.githubusercontent.com/99894266/214369620-4682c2f5-c3da-4b18-b7da-fa454e6daf43.png)
