@@ -2,16 +2,41 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: django-app-manage-migrate
+  labels:
+    app: django-app
+    env: prod
+    owner: SergRyap
 spec:
   template:
     spec:
       containers:
       - name: db-migrate
         image: sergryap/django_app
-        envFrom:
-          - configMapRef:
-              name: django-app-config
+        env:
+          - name: SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: django-app-secret
+                key: secret_key
+          - name: DEBUG
+            valueFrom:
+              secretKeyRef:
+                name: django-app-secret
+                key: debug
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: django-app-secret
+                key: database_url
+          - name: ALLOWED_HOSTS
+            valueFrom:
+              secretKeyRef:
+                name: django-app-secret
+                key: allowed_hosts
+#        envFrom:
+#          - configMapRef:
+#              name: django-app-config
         imagePullPolicy: IfNotPresent
-        command: ["python",  "manage.py", "migrate", "--noinput", "--check"]
+        command: ["python",  "manage.py", "migrate", "--noinput"]
       restartPolicy: Never
   backoffLimit: 4
