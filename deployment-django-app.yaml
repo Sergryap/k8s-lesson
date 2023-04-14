@@ -14,15 +14,33 @@ spec:
   template:
     metadata:
       labels:
-        project: k8s-django # Service will look for those PODS Labels
+        project: k8s-django
     spec:
       containers:
         - name: django-app
           image: sergryap/django_app
           imagePullPolicy: Always
-          envFrom:
-            - configMapRef:
-                name: django-app-config
+          env:
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: django-app-secret
+                  key: secret_key
+            - name: DEBUG
+              valueFrom:
+                secretKeyRef:
+                  name: django-app-secret
+                  key: debug
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: django-app-secret
+                  key: database_url
+            - name: ALLOWED_HOSTS
+              valueFrom:
+                secretKeyRef:
+                  name: django-app-secret
+                  key: allowed_hosts
           ports:
             - containerPort: 80
               protocol  : TCP
@@ -32,7 +50,8 @@ kind: Service
 metadata:
   name: django-app-service
   labels:
-    env  : prod
+    app: django-app
+    env: prod
     owner: SergRyap
 spec:
   selector:
@@ -41,13 +60,5 @@ spec:
   ports:
     - name      : app-listener
       protocol  : TCP
-      port      : 80  # Port on NodePort
-      targetPort: 80  # Port on POD
-
-
-#minikube ssh docker start sleepy_pike
-#kubectl expose deployment django-app-deployment --type=NodePort --port=80
-#minikube service django-app-service --url
-#kubectl create configmap django-app-config --from-env-file=backend_main_django/.env - For more flexibility and decoupling from Kubernetes, you can also use external configuration files in the format VAR=VAL
-#kubectl patch configmap tcp-services -n ingress-nginx --patch '{"data":{"80":"default/django-app-service:80"}}'
-#kubectl patch deployment ingress-nginx-controller --patch "$(cat ingress-nginx-controller-patch.yaml)" -n ingress-nginx
+      port      : 80
+      targetPort: 80
