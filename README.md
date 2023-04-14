@@ -36,7 +36,7 @@ $ docker-compose run web ./manage.py createsuperuser
 
 ## Как запустить сайт в кластере minikube
 
-У вас должны быть установлены `minikube` и `kubectl`
+У вас должны быть установлены `minikube`, `kubectl`, `virtualbox`
 
 #### Создайте кластер в minikube:
 ```sh
@@ -53,7 +53,7 @@ helm install my-release my-repo/postgresql
 ```
 #### Создайте Secret c необходимым данными для вашего проекта:
 ```sh
-kubectl create -f app_secret.yaml` не должен размещаться в открытом доступе
+kubectl create -f app_secret.yaml`
 ```
 Для реального проекта файл `app_secret.yaml` не должен размещаться в открытом доступе
 
