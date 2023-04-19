@@ -33,9 +33,6 @@ spec:
               secretKeyRef:
                 name: django-app-secret
                 key: allowed_hosts
-#        envFrom:
-#          - configMapRef:
-#              name: django-app-config
         imagePullPolicy: IfNotPresent
         command: ["python",  "manage.py", "migrate", "--noinput"]
       restartPolicy: Never
