@@ -61,19 +61,6 @@ kubectl create -f app_secret.yaml
 ```sh
 kubectl apply -f deployment-django-app.yaml
 ```
-#### Добавьте службу TCP в контроллер входящего трафика nginx, выполнив следующую команду:
-```sh
-kubectl patch configmap tcp-services -n ingress-nginx --patch '{"data":{"80":"default/django-app-service:80"}}'
-```
-Где:
-- `80`: порт, который ваша служба должна прослушивать из-за пределов виртуальной машины minikube
-- `default`: пространство имен, в котором установлена ваша служба
-- `django-app-service`: название сервиса 
-
-Вы можем убедиться, что наш ресурс был исправлен с помощью следующей команды:
-```sh
-kubectl get configmap tcp-services -n ingress-nginx -o yaml
-```
 #### Настройте правила для воходящего трафика для вашего ingress:
 ```sh
 kubectl apply -f ingress-django-app.yaml
